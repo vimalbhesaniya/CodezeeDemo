@@ -1,0 +1,59 @@
+{
+  "name": "diamx-light-frontend",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "start": "pnpm install && turbo run start",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2",
+    "@types/lodash": "^4.17.5",
+    "@types/luxon": "^3.4.2",
+    "@types/react-image-gallery": "^1.2.4",
+    "@types/uuid": "^10.0.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^15.2.7",
+    "prettier": "^3.2.5",
+    "turbo": "latest",
+    "typescript": "^5.4.5"
+  },
+  "packageManager": "pnpm@8.15.6",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@hookform/resolvers": "^3.6.0",
+    "@mui/icons-material": "^5.15.20",
+    "@mui/material": "^5.15.20",
+    "@mui/styled-engine-sc": "6.0.0-alpha.18",
+    "@mui/x-data-grid": "^7.6.2",
+    "@mui/x-date-pickers": "^7.8.0",
+    "@tanstack/react-query": "^5.48.0",
+    "@tanstack/react-query-devtools": "^5.48.0",
+    "ag-grid-community": "^31.3.2",
+    "ag-grid-react": "^31.3.2",
+    "axios": "^1.7.2",
+    "eslint-plugin-sonarjs": "1.0.4-alpha.1",
+    "file64": "1.0.1",
+    "i18next": "^23.12.1",
+    "lodash": "^4.17.21",
+    "luxon": "^3.4.4",
+    "next": "^14.2.5",
+    "next-auth": "^4.24.7",
+    "react-hook-form": "^7.51.5",
+    "react-i18next": "^14.1.2",
+    "react-toastify": "^10.0.5",
+    "react-webcam": "7.2.0",
+    "styled-components": "^6.1.11",
+    "usehooks-ts": "^3.1.0",
+    "uuid": "^10.0.0",
+    "zod": "^3.23.8"
+  }
+}
