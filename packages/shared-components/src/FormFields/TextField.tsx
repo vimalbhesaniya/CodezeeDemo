@@ -1,3 +1,5 @@
+"use client";
+
 import {
   InputLabel,
   TextField as MuiTextField,

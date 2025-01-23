@@ -1,3 +1,5 @@
+"use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import MailOutlineOutlinedIcon from "@mui/icons-material/MailOutlineOutlined";
 import {
@@ -11,42 +13,19 @@ import {
 } from "@mui/material";
 import {
   Button,
-  CheckBox,
   LogoIcon,
   PasswordField,
   TextField,
 } from "@repo/shared-components";
-import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { z } from "zod";
-import { emailRegex, passwordRegex } from "../../utils/regex";
+import { toast } from "react-toastify";
+import { LOGIN_ROUTES } from "../../constants/routes/authRoutes";
 import { AuthUiCard } from "../auth/Layouts/AuthUiCard";
-
-const FormValuesSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .regex(emailRegex, "common.email.invalid")
-    .nullable()
-    .refine((value) => !!value, {
-      message: "common.required",
-    }),
-  password: z
-    .string()
-    .trim()
-    .min(1, { message: "common.required" })
-    .regex(
-      passwordRegex,
-      "Password must be alphanumeric and contain at-least 8 characters"
-    )
-    .max(128, { message: "Password can`t be more than 128 characters" }),
-  rememberMe: z.boolean(),
-});
-
-export type FormValuesTypes = z.infer<typeof FormValuesSchema>;
+import { useLoginApi } from "./hooks/useLoginApi";
+import { FormValuesSchema, FormValuesTypes } from "./type";
 
 export const SignInForm = () => {
   const searchParams = useSearchParams();
@@ -75,37 +54,26 @@ export const SignInForm = () => {
     defaultValues: {
       email: "",
       password: "",
-      rememberMe: false,
     },
     resolver: zodResolver(FormValuesSchema),
     mode: "all",
   });
 
-  const onSubmit = async (formValues: FormValuesTypes) => {
-    setLoading(true);
-
-    const result = await signIn("credentials", {
-      email: formValues.email,
-      password: formValues.password,
-      redirect: false,
-      callbackUrl: "/",
-    });
-
-    setLoading(false);
-
-    if (result?.error) {
-      setError("Incorrect credentials");
-    } else if (result?.ok) {
-      if (callBackUrl) {
-        router.push(callBackUrl);
-      } else {
+  const { mutate } = useLoginApi({
+    route: LOGIN_ROUTES.post,
+    options: {
+      onSuccess: () => {
         router.push("/");
-      }
-    }
-  };
+        toast.success("Login Successfully");
+      },
+      onError: (err: any) => {
+        toast.error(err?.message);
+      },
+    },
+  });
 
-  const errorMessages = (messageKey?: string) => {
-    return messageKey && t(messageKey);
+  const onSubmit = (loginValue: FormValuesTypes) => {
+    mutate(loginValue);
   };
 
   return (
@@ -143,7 +111,7 @@ export const SignInForm = () => {
               name="email"
               required
               error={!!errors.email}
-              helperText={errorMessages(errors.email?.message)}
+              helperText={errors.email?.message}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -160,7 +128,7 @@ export const SignInForm = () => {
               placeholder="Password"
               required
               error={!!errors.password}
-              helperText={errorMessages(errors.password?.message)}
+              helperText={errors.password?.message}
             />
           </Stack>
 
@@ -170,8 +138,6 @@ export const SignInForm = () => {
             alignItems="center"
           >
             <Stack direction="row" gap="10px">
-              <CheckBox name="rememberMe" control={control} size="small" />
-
               <InputLabel sx={{ color: color.iron[800] }}>
                 Remember me
               </InputLabel>

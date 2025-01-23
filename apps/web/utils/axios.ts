@@ -11,7 +11,6 @@ const axiosFactoryCommonConfig = {
       : process.env.NEXT_PUBLIC_API_SERVER,
   headers,
 };
-
 export const rawAxios = axiosFactory.create(axiosFactoryCommonConfig);
 
 export const rawAxiosPrivate = axiosFactory.create(axiosFactoryCommonConfig);
