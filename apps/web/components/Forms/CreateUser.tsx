@@ -27,7 +27,7 @@ export default function CreateUser({ handleStepChange }: { handleStepChange: (da
       confirmPassword: "",
       country: "",
       email: "",
-      gender: "Female",
+      gender: "famale",
       password: "",
       pincode: '',
       state: "",
@@ -41,7 +41,7 @@ export default function CreateUser({ handleStepChange }: { handleStepChange: (da
   const triggerSchema: TriggerComponent = {
     1: {
       title: "Step 1",
-      field: ['firstname', 'lastname'],
+      field: ['firstname', 'lastname', 'gender'],
       component: <Step1 control={control} errors={errors} />
     },
     2: {
@@ -75,10 +75,11 @@ export default function CreateUser({ handleStepChange }: { handleStepChange: (da
 
     if (currentStep < 3 && isValid) {
       setCurrentStep(prev => prev + 1 as CurrentStepType)
+    } else {
+      handleSubmit((data) => {
+        console.log('call--data', data);
+      })()
     }
-    handleSubmit((data) => {
-      console.log('call--data', data);
-    })
 
   }
   return (

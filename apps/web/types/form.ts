@@ -33,7 +33,7 @@ export const Schema = z
         message: "Lastname is required",
       })
       .trim(),
-    gender: z.enum(["Male", "Female", "Other"]).refine((value) => !!value, {
+    gender: z.enum(["male", "famale", "other"]).refine((value) => !!value, {
       message: "Gender is required",
     }),
     username: z
@@ -61,7 +61,7 @@ export const Schema = z
       .min(6, {
         message: "Pincode is required",
       })
-      .regex(/^\d{6}$/, "Invalid pin code. Must be 6 digits.")
+      .regex(/^\d{6}$/, "Invalid pin code. Must be 6 digits."),
   })
   .refine((data) => data.confirmPassword === data.password, {
     message: "Password and confirm password should match",

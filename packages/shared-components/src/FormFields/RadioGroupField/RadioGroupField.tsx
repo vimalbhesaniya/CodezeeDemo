@@ -8,7 +8,7 @@ import {
 } from "react-hook-form";
 
 type Options = {
-  values: boolean;
+  values: boolean | string | number;
   label: string;
   disabled: boolean;
 };
@@ -43,7 +43,7 @@ export function RadioGroupField<P extends FieldValues>({
         name={name}
         value={value}
         onChange={(_, event) => {
-          onChange(event === "true" ? true : false);
+          onChange(event);
         }}
       >
         <Stack gap="45px" direction="row">
