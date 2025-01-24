@@ -1,32 +1,16 @@
 import { Stack } from "@mui/material";
-import Grid2 from "@mui/material/Unstable_Grid2";
-import { TextField } from "@repo/shared-components";
-import type {
-  Control,
-  FieldErrors,
-  FieldValues,
-  UseControllerProps,
-} from "react-hook-form";
+import { TextField, TextFieldProps } from "@repo/shared-components";
+import { FieldErrors } from "react-hook-form";
+import { FormType } from "../../../types/form";
 
-type Step1Type<TFieldValues extends FieldValues> = {
-  control: Control<TFieldValues>;
-  errors: FieldErrors<TFieldValues>;
-};
-
-function Step1<T extends FieldValues | UseControllerProps>({
-  control,
-  errors,
-}: Readonly<Step1Type<T>>) {
+function Step1({ control, errors }: Pick<TextFieldProps<FormType>, "control"> & { errors: FieldErrors<FormType> }) {
   return (
-    <Stack>
-      <Grid2>
-        name={"firstname"}
-        control={control}
-        helperText={errors.firstname?.message}
-        label={"hello"}
-        />
-      </Grid2>
-    </Stack >
+    <>
+      <Stack gap={2}>
+        <TextField fullWidth label={'First Name'} name="firstname" control={control} helperText={errors.firstname?.message} />
+        <TextField fullWidth label={'Last Name'} name="lastname" control={control} helperText={errors.lastname?.message} />
+      </Stack>
+    </>
   );
 }
 
