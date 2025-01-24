@@ -6,7 +6,8 @@ export const useGetUserData = ({ route }: { route: string }) => {
     queryKey: ["profileData"],
     queryFn: async () => {
       const response = await BASIC_URL.get(route);
+
       return response.data
-    },
+    }, 
   });
 };

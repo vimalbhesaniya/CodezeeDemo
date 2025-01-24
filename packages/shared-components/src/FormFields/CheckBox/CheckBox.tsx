@@ -118,11 +118,9 @@
 // }
 
 
-
-
 "use client";
+
 import {
-  Box,
   FormLabel,
   Checkbox as MuiCheckBox,
   Stack,
@@ -130,60 +128,68 @@ import {
   type CheckboxProps as MuiCheckboxProps
 } from "@mui/material";
 import React from "react";
-import { ControllerRenderProps, FieldValues, useController, UseControllerProps } from "react-hook-form";
-
+import type { ControllerRenderProps, FieldValues, UseControllerProps } from "react-hook-form";
+import { useController } from "react-hook-form";
+import { v4 as uuidv4 } from "uuid";
 
 type Option = {
   value: string;
   label: string;
 };
 
-type CheckBoxProps<T extends FieldValues> = UseControllerProps<T> & Omit<Omit<MuiCheckboxProps, 'checked'>, keyof ControllerRenderProps<T>> & {
+type CheckBoxProps<T extends FieldValues> = UseControllerProps<T> & Omit<Omit<MuiCheckboxProps, "checked">, keyof ControllerRenderProps<T>> & {
   options: Option[],
   label: string,
   error: boolean;
-  helperText: string | undefined
+  helperText: string | undefined,
+  checked?: string[]
 }
-export function Checkbox<T extends FieldValues>({ helperText, name, options, label, control, defaultValue }: CheckBoxProps<T>) {
-  const { field } = useController({
+export function Checkbox<T extends FieldValues>({ checked, helperText, name, options, label, control, defaultValue }: CheckBoxProps<T>) {
+  const { field,  } = useController({
     name,
     control,
     defaultValue
   });
-  const { value, onChange } = field;
+
+  const { value, onChange, } = field;
+
+
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value: selectedValue, checked } = event.target;
+
     if (checked) {
       onChange([...value, selectedValue]);
     } else {
-      onChange(value.filter((v: string) => v !== selectedValue));
+      const disSelected = value.filter((v: string) => v !== selectedValue)
+
+      onChange(disSelected);
     }
   };
 
   return (
-    <>
-      <Stack direction={"column"}>
+    <Stack direction={"column"}>
         {label && <Typography variant="subtitle1">{label}</Typography>}
-        <Stack direction={'row'} mt={1} gap={2}>
+      <Stack direction={"row"} mt={1} gap={2}>
           {
             options.map(({ label, value }) => {
-              return <>
-                <Stack direction={'row'} gap={1}>
+              return <Stack key={
+                uuidv4()
+              } direction={"row"} gap={1}>
 
                   <MuiCheckBox
                     {...field}
-                    id={value}
+                  id={value}    
+                  checked={checked?.length ? checked.includes(value) : false}
+
                     onChange={handleCheckboxChange}
                     value={value}
                   />
                   <FormLabel htmlFor={value}>{label}</FormLabel>
-                </Stack>
-              </>
+              </Stack>
             })
           }
         </Stack>
-        {helperText && <Typography variant="caption" mt={1} color={'red'}>{helperText}</Typography>}
-      </Stack>
-    </>
+      {helperText && <Typography variant="caption" mt={1} color={"red"}>{helperText}</Typography>}
+    </Stack>
   );
 }
