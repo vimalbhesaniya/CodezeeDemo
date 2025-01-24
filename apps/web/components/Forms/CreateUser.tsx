@@ -3,12 +3,13 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Stack } from "@mui/material";
 import { Button } from "@repo/shared-components";
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { useForm } from "react-hook-form";
 import { FormType, Schema } from "../../types/form";
 import { CurrentStepType, TriggerComponent } from '../../types/Step';
 import Step1 from "./Steps/Step1";
 import Step2 from './Steps/Step2';
+import Step3 from './Steps/Step3';
 
 export default function CreateUser({ handleStepChange }: { handleStepChange: (data: string) => void }) {
   const {
@@ -19,6 +20,7 @@ export default function CreateUser({ handleStepChange }: { handleStepChange: (da
     formState: { errors },
   } = useForm<FormType>({
     resolver: zodResolver(Schema),
+    mode: "all",
     defaultValues: {
       firstname: "",
       lastname: "",
@@ -27,7 +29,7 @@ export default function CreateUser({ handleStepChange }: { handleStepChange: (da
       email: "",
       gender: "Female",
       password: "",
-      pincode: 0,
+      pincode: '',
       state: "",
       street: "",
       username: ""
@@ -44,13 +46,13 @@ export default function CreateUser({ handleStepChange }: { handleStepChange: (da
     },
     2: {
       title: "Step 2",
-      field: ['email', 'password', 'username', 'confirmpassword'],
+      field: ['email', 'password', 'username', 'confirmPassword'],
       component: <Step2 control={control} errors={errors} />
     },
     3: {
       title: "Step 3",
       field: ['street', 'country', 'state', 'pincode'],
-      component: <Step1 control={control} errors={errors} />
+      component: <Step3 control={control} errors={errors} />
     }
   }
 
@@ -64,26 +66,28 @@ export default function CreateUser({ handleStepChange }: { handleStepChange: (da
     }
   }
 
-  const handleNext = async () => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     const isValid = await trigger(triggerSchema[currentStep].field)
-    if (isValid) {
-      return
+    if (!isValid) {
+      return false
     }
-    console.log('call--errors', errors);
-    if (currentStep < 3) {
-      handleSubmit((data) => {
-        console.log('call--data', data);
-      })
+
+    if (currentStep < 3 && isValid) {
       setCurrentStep(prev => prev + 1 as CurrentStepType)
     }
+    handleSubmit((data) => {
+      console.log('call--data', data);
+    })
+
   }
   return (
     <Stack>
-      <form action="">
+      <form action="" onSubmit={onSubmit}>
         {triggerSchema[currentStep].component}
         <Stack direction={'row'} pt={3} justifyContent={'space-between'}>
           <Button startIcon={<ArrowBackIosIcon />} onClick={() => handlePrev()}>Prev</Button>
-          <Button endIcon={<ArrowForwardIosIcon />} onClick={() => handleNext()}>Next</Button>
+          <Button type='submit' endIcon={<ArrowForwardIosIcon />}>Next</Button>
         </Stack>
       </form>
     </Stack>

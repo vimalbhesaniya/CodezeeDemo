@@ -56,16 +56,12 @@ export const Schema = z
     street: z.string().min(2, {
       message: "Street is required",
     }),
-    pincode: z.coerce
-      .number({
-        message: "Only number allowed",
-      })
+    pincode: z
+      .string()
       .min(6, {
-        message: "Pincode must have length of 6",
+        message: "Pincode is required",
       })
-      .max(6, {
-        message: "Pincode is not valid",
-      }),
+      .regex(/^\d{6}$/, "Invalid pin code. Must be 6 digits.")
   })
   .refine((data) => data.confirmPassword === data.password, {
     message: "Password and confirm password should match",

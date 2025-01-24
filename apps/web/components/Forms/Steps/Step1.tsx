@@ -1,14 +1,13 @@
 import { Stack } from "@mui/material";
-import { TextField, TextFieldProps } from "@repo/shared-components";
-import { FieldErrors } from "react-hook-form";
-import { FormType } from "../../../types/form";
+import { TextField } from "@repo/shared-components";
+import { Step } from "../../../types/Step";
 
-function Step1({ control, errors }: Pick<TextFieldProps<FormType>, "control"> & { errors: FieldErrors<FormType> }) {
+function Step1({ control,errors  }: Step) {
   return (
     <>
       <Stack gap={2}>
-        <TextField fullWidth label={'First Name'} name="firstname" control={control} helperText={errors.firstname?.message} />
-        <TextField fullWidth label={'Last Name'} name="lastname" control={control} helperText={errors.lastname?.message} />
+        <TextField fullWidth label={'First Name'} error={!!errors.firstname?.message} name="firstname" control={control} helperText={errors.firstname?.message} />
+        <TextField fullWidth label={'Last Name'} error={!!errors.lastname?.message} name="lastname" control={control} helperText={errors.lastname?.message} />
       </Stack>
     </>
   );
