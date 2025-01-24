@@ -4,8 +4,9 @@ import { BASIC_URL } from "../../../utils/basicUrl";
 export const useGetUserData = ({ route }: { route: string }) => {
   return useQuery({
     queryKey: ["profileData"],
-    queryFn: () => {
-      return BASIC_URL.post(route);
+    queryFn: async () => {
+      const response = await BASIC_URL.get(route);
+      return response.data
     },
   });
 };

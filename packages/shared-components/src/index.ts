@@ -1,6 +1,7 @@
 export * from "./AppBar";
 export * from "./Breadcrumbs";
 export * from "./Button";
+export * from "./CommonTable";
 export * from "./Dialog";
 export * from "./Drawer";
 export * from "./FormFields";

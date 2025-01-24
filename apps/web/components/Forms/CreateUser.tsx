@@ -5,17 +5,21 @@ import { Stack } from "@mui/material";
 import { Button } from "@repo/shared-components";
 import { FormEvent, useEffect, useState } from 'react';
 import { useForm } from "react-hook-form";
+import { toast } from 'react-toastify';
+import { SIGNUP_ROUTES } from '../../constants/routes/authRoutes';
 import { FormType, Schema } from "../../types/form";
 import { CurrentStepType, TriggerComponent } from '../../types/Step';
+import { useCreateApi } from '../signIn/hooks/useCreateApi';
 import Step1 from "./Steps/Step1";
 import Step2 from './Steps/Step2';
 import Step3 from './Steps/Step3';
+import Step4 from './Steps/Step4';
 
 export default function CreateUser({ handleStepChange }: { handleStepChange: (data: string) => void }) {
   const {
     control,
-    watch,
     trigger,
+    watch,
     handleSubmit,
     formState: { errors },
   } = useForm<FormType>({
@@ -32,7 +36,8 @@ export default function CreateUser({ handleStepChange }: { handleStepChange: (da
       pincode: '',
       state: "",
       street: "",
-      username: ""
+      username: "",
+      hobbies: []
     },
   });
 
@@ -53,6 +58,11 @@ export default function CreateUser({ handleStepChange }: { handleStepChange: (da
       title: "Step 3",
       field: ['street', 'country', 'state', 'pincode'],
       component: <Step3 control={control} errors={errors} />
+    },
+    4: {
+      title: "Step 4",
+      field: ['hobbies'],
+      component: <Step4 control={control} errors={errors} />
     }
   }
 
@@ -66,6 +76,17 @@ export default function CreateUser({ handleStepChange }: { handleStepChange: (da
     }
   }
 
+  const { mutate } = useCreateApi({
+    route: SIGNUP_ROUTES.post, options: {
+      onSuccess: () => {
+        toast.success("Registration successfully")
+      },
+      onError: (err) => {
+        toast.error(err?.message)
+      }
+    }
+  })
+
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const isValid = await trigger(triggerSchema[currentStep].field)
@@ -73,15 +94,15 @@ export default function CreateUser({ handleStepChange }: { handleStepChange: (da
       return false
     }
 
-    if (currentStep < 3 && isValid) {
+    if (currentStep < 4 && isValid) {
       setCurrentStep(prev => prev + 1 as CurrentStepType)
     } else {
       handleSubmit((data) => {
-        console.log('call--data', data);
+        mutate(data)
       })()
     }
-
   }
+
   return (
     <Stack>
       <form action="" onSubmit={onSubmit}>
@@ -93,4 +114,4 @@ export default function CreateUser({ handleStepChange }: { handleStepChange: (da
       </form>
     </Stack>
   );
-}
+} 

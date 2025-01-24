@@ -6,7 +6,7 @@ export type Step = Pick<TextFieldProps<FormType>, "control"> & {
   errors: FieldErrors<FormType>;
 };
 
-export type CurrentStepType = 1 | 2 | 3;
+export type CurrentStepType = 1 | 2 | 3 | 4;
 
 export type TriggerComponent = {
   [key in CurrentStepType]: {

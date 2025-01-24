@@ -56,6 +56,9 @@ export const Schema = z
     street: z.string().min(2, {
       message: "Street is required",
     }),
+    hobbies: z.string().array().min(1, {
+      message: "Select atleast one Hobbie",
+    }),
     pincode: z
       .string()
       .min(6, {
